@@ -22,7 +22,7 @@ public class Test implements Listener
 			
 			p.sendMessage(ChatColor.AQUA + "You feel a rush of energy!");
 			p.addPotionEffect(new PotionEffect(PotionEffectType.SPEED,
-							  10, 1, false, false), true);
+							  200, 1, false, false), true);
 		}
 	}
 }
