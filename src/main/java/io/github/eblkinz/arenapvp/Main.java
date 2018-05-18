@@ -10,7 +10,7 @@ public class Main extends JavaPlugin
 	@Override
 	public void onEnable()
 	{
-		//registerEvents(this, new );
+		registerEvents(this, new Test());
 	}
 	
 	@Override
@@ -30,7 +30,7 @@ public class Main extends JavaPlugin
 	}
 	
 	/**
-	 * Registers event listeners.
+	 * Registers custom event listeners.
 	 * @param plugin The plugin to register the events to.
 	 * @param listeners The listeners to register.
 	 */
@@ -40,7 +40,8 @@ public class Main extends JavaPlugin
 		//For each listener register events
 		for (Listener listener : listeners)
 		{
-			Bukkit.getServer().getPluginManager().registerEvents(listener, plugin);
+			Bukkit.getServer().getPluginManager().registerEvents(listener,
+																 plugin);
 		}
 	}
 }
