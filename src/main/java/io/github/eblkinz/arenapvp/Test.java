@@ -16,7 +16,7 @@ public class Test implements Listener
 	public void onEatCake(PlayerInteractEvent e)
 	{
 		if (e.getAction() == Action.RIGHT_CLICK_BLOCK &&
-			e.getClickedBlock().getType() == Material.CAKE)
+			e.getClickedBlock().getType() == Material.CAKE_BLOCK)
 		{
 			Player p = e.getPlayer();
 			
