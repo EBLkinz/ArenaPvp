@@ -7,16 +7,29 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 public class Main extends JavaPlugin
 {
+	/**
+	 * Runs when the server starts.
+	 */
+	
 	@Override
 	public void onEnable()
 	{
+		// Register server events
 		registerEvents(this, new Test());
+		
+		// Log test keys
+		//getLogger().info(SettingsManager.getTest().getKeys().toString());
 	}
+	
+	/**
+	 * Runs when the server stops.
+	 */
 	
 	@Override
 	public void onDisable()
 	{
-		
+		// Log test keys
+		//getLogger().info(SettingsManager.getTest().getKeys().toString());
 	}
 	
 	/**
@@ -40,6 +53,7 @@ public class Main extends JavaPlugin
 		//For each listener register events
 		for (Listener listener : listeners)
 		{
+			//Register the event
 			Bukkit.getServer().getPluginManager().registerEvents(listener,
 																 plugin);
 		}

@@ -1,6 +1,5 @@
 package io.github.eblkinz.arenapvp;
 
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -20,7 +19,7 @@ public class Test implements Listener
 			e.getAction() == Action.RIGHT_CLICK_BLOCK &&
 			e.getClickedBlock().getType() == Material.CAKE_BLOCK)
 		{
-			p.sendMessage(ChatColor.AQUA + "You feel a rush of energy!");
+			p.sendMessage(SettingsManager.getTest().get("data").toString());
 			p.addPotionEffect(new PotionEffect(PotionEffectType.SPEED,
 							  200, 1, false, false), true);
 		}
