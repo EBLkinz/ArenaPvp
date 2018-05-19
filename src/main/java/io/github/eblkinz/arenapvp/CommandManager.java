@@ -2,16 +2,18 @@ package io.github.eblkinz.arenapvp;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabExecutor;
 import org.bukkit.entity.Player;
 
 import io.github.eblkinz.arenapvp.commands.Ping;
 
-public class CommandManager implements CommandExecutor
+public class CommandManager implements TabExecutor
 {
 	private ArrayList<GameCommand> cmds;	// List of all game commands
 	
@@ -104,5 +106,60 @@ public class CommandManager implements CommandExecutor
 		}
 		
 		return true;
+	}
+	
+	/*
+	 * Called whenever a player presses tab while typing a command.
+	 */
+	
+	@Override
+	public List<String> onTabComplete(CommandSender sender, Command cmd, String alias, String[] args)
+	{
+		// If the command entered is '/arenapvp'
+		if (cmd.getName().equalsIgnoreCase("arenapvp"))
+		{
+			// If there is only one argument entered
+			if (args.length == 1)
+			{
+				// Create a new ArrayList of Strings to hold subcommands
+				ArrayList<String> subCommands = new ArrayList<>();
+				
+				// If the single argument is not empty
+				if (!args[0].equals(""))
+				{
+					// For each game command in the cmds list
+					for (GameCommand gcmd : cmds)
+					{
+						// Save the name of the command
+						String name = gcmd.getClass().getAnnotation(CommandInfo.class).aliases()[0];
+						
+						// If the name starts with the user entered argument
+						if (name.toLowerCase().startsWith(args[0].toLowerCase()))
+						{
+							// Add the name of the command to the list
+							subCommands.add(name);
+						}
+					}
+				}
+				else
+				{
+					// For each game command in the cmds list
+					for (GameCommand gcmd : cmds)
+					{
+						// Add the name of the command to the list
+						subCommands.add(gcmd.getClass().getAnnotation(CommandInfo.class).aliases()[0]);
+					}
+				}
+				
+				// Sort the list into alphabetical order
+				Collections.sort(subCommands);
+				
+				// Return the sorted list of all commands that begin with the user's entry
+				return subCommands;
+			}
+		}
+		
+		// No commands match the argument (or no argument was specified)
+		return null;
 	}
 }

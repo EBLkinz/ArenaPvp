@@ -1,6 +1,7 @@
 package io.github.eblkinz.arenapvp;
 
 import org.bukkit.Bukkit;
+import org.bukkit.command.PluginCommand;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -17,8 +18,10 @@ public class Main extends JavaPlugin
 		// Register server events
 		registerEvents(this, new Test());
 		
-		// Set command executor
-		getCommand("arenapvp").setExecutor(new CommandManager());
+		// Set command executor and tab completer
+		PluginCommand pc = getCommand("arenapvp");
+		pc.setExecutor(new CommandManager());
+		pc.setTabCompleter(new CommandManager());
 	}
 	
 	/**
