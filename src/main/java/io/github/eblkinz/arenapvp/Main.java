@@ -17,8 +17,8 @@ public class Main extends JavaPlugin
 		// Register server events
 		registerEvents(this, new Test());
 		
-		// Log test keys
-		//getLogger().info(SettingsManager.getTest().getKeys().toString());
+		// Set command executor
+		getCommand("arenapvp").setExecutor(new CommandManager());
 	}
 	
 	/**
@@ -28,8 +28,7 @@ public class Main extends JavaPlugin
 	@Override
 	public void onDisable()
 	{
-		// Log test keys
-		//getLogger().info(SettingsManager.getTest().getKeys().toString());
+		
 	}
 	
 	/**
@@ -54,8 +53,7 @@ public class Main extends JavaPlugin
 		for (Listener listener : listeners)
 		{
 			//Register the event
-			Bukkit.getServer().getPluginManager().registerEvents(listener,
-																 plugin);
+			Bukkit.getServer().getPluginManager().registerEvents(listener, plugin);
 		}
 	}
 }

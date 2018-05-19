@@ -20,8 +20,7 @@ public class Test implements Listener
 			e.getClickedBlock().getType() == Material.CAKE_BLOCK)
 		{
 			p.sendMessage(SettingsManager.getTest().get("data").toString());
-			p.addPotionEffect(new PotionEffect(PotionEffectType.SPEED,
-							  200, 1, false, false), true);
+			p.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 200, 1, false, false), true);
 		}
 	}
 }

@@ -42,8 +42,7 @@ public class SettingsManager
 		if (!plugin.getDataFolder().exists())
 		{
 			// Log the lack of a data folder
-			plugin.getLogger().info("Couldn't find data folder. " + 
-									"Creating a new data folder.");
+			plugin.getLogger().info("Couldn't find data folder. Creating a new data folder.");
 			
 			// Make a new data folder
 			plugin.getDataFolder().mkdirs();
@@ -56,8 +55,7 @@ public class SettingsManager
 		if (!file.exists())
 		{
 			// Log the lack of a file
-			plugin.getLogger().info("Couldn't find " + fileName + ".yml. " +
-									"Creating a new config file.");
+			plugin.getLogger().info("Couldn't find " + fileName + ".yml. Creating a new config file.");
 			
 			// Try to create a new file
 			try
@@ -75,8 +73,7 @@ public class SettingsManager
 			// Try to fetch the default configuration
 			try
 			{
-				InputStream in = plugin.getResource(fileName + ".yml");
-				defaultConfig = new InputStreamReader(in, "UTF-8");
+				defaultConfig = new InputStreamReader(plugin.getResource(fileName + ".yml"), "UTF-8");
 			}
 			catch (UnsupportedEncodingException e)
 			{
@@ -87,8 +84,7 @@ public class SettingsManager
 			if (defaultConfig != null)
 			{
 				// Log the configuration changes
-				plugin.getLogger().info("Loading default file " +
-										fileName + ".yml.");
+				plugin.getLogger().info("Loading default file " + fileName + ".yml.");
 				
 				// Load the default configuration into config
 				config = YamlConfiguration.loadConfiguration(defaultConfig);
