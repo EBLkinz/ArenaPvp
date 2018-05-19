@@ -3,7 +3,6 @@ package io.github.eblkinz.arenapvp;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import org.apache.commons.lang.StringUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
