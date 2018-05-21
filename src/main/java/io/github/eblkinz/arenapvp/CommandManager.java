@@ -11,6 +11,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabExecutor;
 import org.bukkit.entity.Player;
 
+import io.github.eblkinz.arenapvp.commands.AdminPing;
 import io.github.eblkinz.arenapvp.commands.Ping;
 
 public class CommandManager implements TabExecutor
@@ -26,6 +27,7 @@ public class CommandManager implements TabExecutor
 		cmds = new ArrayList<>();
 		
 		cmds.add(new Ping());
+		cmds.add(new AdminPing());
 	}
 	
 	/*
@@ -58,12 +60,16 @@ public class CommandManager implements TabExecutor
 					// Get the game command's info
 					CommandInfo info = gcmd.getClass().getAnnotation(CommandInfo.class);
 					
-					// Create a string with every alias of the command separated by a colon
-					String aliases = String.join(":", info.aliases());
-					
-					// Send the player a message detailing the game command's usage and return
-					p.sendMessage(ChatColor.GOLD + "/" + cmd.getName() + " " + aliases + " " +
-								  info.usage() + "- " + ChatColor.WHITE + info.description());
+					// If the command doesn't require permission or the user has the permission
+					if (!info.requiresPerm() || (info.requiresPerm() && p.hasPermission("lordofthearena")))
+					{
+						// Create a string with every alias of the command separated by a colon
+						String aliases = String.join(":", info.aliases());
+						
+						// Send the player a message detailing the game command's usage and return
+						p.sendMessage(ChatColor.GOLD + "/" + cmd.getName() + " " + aliases + " " +
+								  	  info.usage() + "- " + ChatColor.WHITE + info.description());
+					}
 				}
 				
 				return true;
@@ -78,15 +84,19 @@ public class CommandManager implements TabExecutor
 				// Get the game command's info
 				CommandInfo info = gcmd.getClass().getAnnotation(CommandInfo.class);
 				
-				// For each alias in the info's list of aliases
-				for (String alias : info.aliases())
+				// If the command doesn't require permission or the user has the permission
+				if (!info.requiresPerm() || (info.requiresPerm() && p.hasPermission("lordofthearena")))
 				{
-					// If the alias equals the command's argument
-					if (alias.equalsIgnoreCase(args[0]))
+					// For each alias in the info's list of aliases
+					for (String alias : info.aliases())
 					{
-						// Store the game command in wanted and break
-						wanted = gcmd;
-						break;
+						// If the alias equals the command's argument
+						if (alias.equalsIgnoreCase(args[0]))
+						{
+							// Store the game command in wanted and break
+							wanted = gcmd;
+							break;
+						}
 					}
 				}
 			}
@@ -113,7 +123,7 @@ public class CommandManager implements TabExecutor
 	 */
 	
 	@Override
-	public List<String> onTabComplete(CommandSender sender, Command cmd, String alias, String[] args)
+	public List<String> onTabComplete(CommandSender sender, Command cmd, String label, String[] args)
 	{
 		// If the command entered is '/arenapvp'
 		if (cmd.getName().equalsIgnoreCase("arenapvp"))
@@ -130,14 +140,22 @@ public class CommandManager implements TabExecutor
 					// For each game command in the cmds list
 					for (GameCommand gcmd : cmds)
 					{
-						// Save the name of the command
-						String name = gcmd.getClass().getAnnotation(CommandInfo.class).aliases()[0];
-						
-						// If the name starts with the user entered argument
-						if (name.toLowerCase().startsWith(args[0].toLowerCase()))
+						// Get the game command's info
+						CommandInfo info = gcmd.getClass().getAnnotation(CommandInfo.class);
+								
+						// If the command doesn't require permission or the user has the permission
+						if (!info.requiresPerm() || (info.requiresPerm() && sender.hasPermission("lordofthearena")))
 						{
-							// Add the name of the command to the list
-							subCommands.add(name);
+							// For each alias in the info's list of aliases
+							for (String alias : info.aliases())
+							{
+								// If the alias starts with the user entered argument
+								if (alias.toLowerCase().startsWith(args[0].toLowerCase()))
+								{
+									// Add the alias to the list
+									subCommands.add(alias);
+								}
+							}
 						}
 					}
 				}
@@ -146,8 +164,19 @@ public class CommandManager implements TabExecutor
 					// For each game command in the cmds list
 					for (GameCommand gcmd : cmds)
 					{
-						// Add the name of the command to the list
-						subCommands.add(gcmd.getClass().getAnnotation(CommandInfo.class).aliases()[0]);
+						// Get the game command's info
+						CommandInfo info = gcmd.getClass().getAnnotation(CommandInfo.class);
+								
+						// If the command doesn't require permission or the user has the permission
+						if (!info.requiresPerm() || (info.requiresPerm() && sender.hasPermission("lordofthearena")))
+						{
+							// For each alias in the info's list of aliases
+							for (String alias : info.aliases())
+							{
+								// Add the alias to the list
+								subCommands.add(alias);
+							}
+						}
 					}
 				}
 				

@@ -11,5 +11,6 @@ public @interface CommandInfo
 {
 	String description();
 	String usage();
-	String[] aliases();	
+	String[] aliases();
+	boolean requiresPerm();
 }

@@ -8,8 +8,9 @@ import org.bukkit.entity.Player;
 import io.github.eblkinz.arenapvp.CommandInfo;
 import io.github.eblkinz.arenapvp.GameCommand;
 
-@CommandInfo(description = "Ping the server.", usage = "", aliases = {"ping"}, requiresPerm = false)
-public class Ping extends GameCommand
+@CommandInfo(description = "Ping the entire server.", usage = "",
+			 aliases = {"adminping", "aping"}, requiresPerm = true)
+public class AdminPing extends GameCommand
 {
 	@Override
 	public void onCommand(Player p, String[] args)
@@ -24,13 +25,14 @@ public class Ping extends GameCommand
 		// One in five chance
 		if (random.nextInt(5) == 0)
 		{
-			// Print a message using a random color and style
-			p.sendMessage(colors[random.nextInt(colors.length)] + "" + styles[random.nextInt(styles.length)] + "PONG!");
+			// Broadcast a message using a random color and style
+			p.getServer().broadcastMessage(colors[random.nextInt(colors.length)] + "" +
+										   styles[random.nextInt(styles.length)] + "PONG!");
 		}
 		else
 		{
-			// Print a message using a random color
-			p.sendMessage(colors[random.nextInt(colors.length)] + "PONG!");
+			// Broadcast a message using a random color
+			p.getServer().broadcastMessage(colors[random.nextInt(colors.length)] + "PONG!");
 		}
 	}
 }

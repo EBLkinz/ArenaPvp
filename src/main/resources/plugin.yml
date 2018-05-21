@@ -2,9 +2,13 @@ name: ArenaPvp
 author: EBLkinz
 description: ArenaPvp game.
 main: io.github.eblkinz.arenapvp.Main
-version: 1.5
+version: 0.1
 commands:
     arenapvp:
         usage: /<command> <args> [optional args]
         description: The main command for ArenaPvp.
         aliases: [ap]
+permissions:
+    lordofthearena:
+        description: Gives access to admin commands that create and edit arenas.
+        default: op
