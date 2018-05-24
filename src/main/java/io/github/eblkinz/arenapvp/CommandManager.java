@@ -12,6 +12,7 @@ import org.bukkit.command.TabExecutor;
 import org.bukkit.entity.Player;
 
 import io.github.eblkinz.arenapvp.commands.AdminPing;
+import io.github.eblkinz.arenapvp.commands.CreateArena;
 import io.github.eblkinz.arenapvp.commands.Ping;
 
 public class CommandManager implements TabExecutor
@@ -19,7 +20,7 @@ public class CommandManager implements TabExecutor
 	private ArrayList<GameCommand> cmds;	// List of all game commands
 	
 	/*
-	 * Adds all game commands to the arraylist.
+	 * Adds all game commands to the ArrayList.
 	 */
 	
 	protected CommandManager()
@@ -28,6 +29,7 @@ public class CommandManager implements TabExecutor
 		
 		cmds.add(new Ping());
 		cmds.add(new AdminPing());
+		cmds.add(new CreateArena());
 	}
 	
 	/*
@@ -68,7 +70,7 @@ public class CommandManager implements TabExecutor
 						
 						// Send the player a message detailing the game command's usage and return
 						p.sendMessage(ChatColor.GOLD + "/" + cmd.getName() + " " + aliases + " " +
-								  	  info.usage() + "- " + ChatColor.WHITE + info.description());
+								  	  info.usage() + " - " + ChatColor.WHITE + info.description());
 					}
 				}
 				

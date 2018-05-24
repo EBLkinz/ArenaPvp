@@ -15,16 +15,16 @@ import org.bukkit.plugin.Plugin;
 public class SettingsManager
 {
 	private final static SettingsManager
-		testConfig = new SettingsManager("test");	// Test config file
+		arenas = new SettingsManager("arenas");	// Holds information about arenas
 	
 	/**
-	 * Gets the test config file.
-	 * @return the test config file.
+	 * Gets the arenas config file.
+	 * @return the arenas config file.
 	 */
 	
-	public static SettingsManager getTest()
+	public static SettingsManager getArenas()
 	{
-		return testConfig;
+		return arenas;
 	}
 	
 	private File file;							// A blank file

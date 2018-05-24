@@ -16,12 +16,15 @@ public class Main extends JavaPlugin
 	public void onEnable()
 	{
 		// Register server events
-		registerEvents(this, new Test());
+		// registerEvents(this, );
 		
 		// Set command executor and tab completer
 		PluginCommand pc = getCommand("arenapvp");
 		pc.setExecutor(new CommandManager());
 		pc.setTabCompleter(new CommandManager());
+		
+		// Run the ArenaBuilder setup
+		ArenaBuilder.setup();
 	}
 	
 	/**

@@ -8,7 +8,7 @@ import org.bukkit.entity.Player;
 import io.github.eblkinz.arenapvp.CommandInfo;
 import io.github.eblkinz.arenapvp.GameCommand;
 
-@CommandInfo(description = "Ping the entire server.", usage = "",
+@CommandInfo(description = "Pings the entire server.", usage = "",
 			 aliases = {"adminping", "aping"}, requiresPerm = true)
 public class AdminPing extends GameCommand
 {

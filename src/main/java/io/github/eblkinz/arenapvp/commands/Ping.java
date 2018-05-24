@@ -8,7 +8,7 @@ import org.bukkit.entity.Player;
 import io.github.eblkinz.arenapvp.CommandInfo;
 import io.github.eblkinz.arenapvp.GameCommand;
 
-@CommandInfo(description = "Ping the server.", usage = "", aliases = {"ping"}, requiresPerm = false)
+@CommandInfo(description = "Pings the server.", usage = "", aliases = {"ping"}, requiresPerm = false)
 public class Ping extends GameCommand
 {
 	@Override
