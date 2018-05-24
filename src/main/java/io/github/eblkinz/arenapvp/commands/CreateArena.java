@@ -13,20 +13,26 @@ public class CreateArena extends GameCommand
 	@Override
 	public void onCommand(Player p, String[] args)
 	{
+		// If no ID was given
 		if (args.length == 0)
 		{
-			p.sendMessage(ChatColor.RED + "You must specify a name for the arena.");
+			// Send a warning message and return
+			p.sendMessage(ChatColor.RED + "You must specify an id for the arena.");
 			return;
 		}
 		
+		// Get the user entered ID
 		String id = args[0];
 		
+		// If the there's already an arena with that ID
 		if (ArenaBuilder.getArena(id) != null)
 		{
+			// Send a warning message and return
 			p.sendMessage(ChatColor.RED + "An arena with that name already exists.");
 			return;
 		}
 		
+		// Create a new arena with the specified ID and print a confirmation message
 		ArenaBuilder.addArena(id);
 		p.sendMessage(ChatColor.GREEN + "Created arena " + ChatColor.GOLD + id + ChatColor.GREEN + ".");
 	}
