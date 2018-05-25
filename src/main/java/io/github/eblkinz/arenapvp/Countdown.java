@@ -12,7 +12,9 @@ public class Countdown extends BukkitRunnable
 {
 
 	private int i;								// Holds the current count
+	
 	private Arena counting;						// Holds the arena counting down
+	
 	private ArrayList<Integer> countingNums;	// Holds a list of integers that trigger notifications
 	
 	/**
@@ -31,7 +33,7 @@ public class Countdown extends BukkitRunnable
 		i = start;
 		
 		// Create a new empty ArrayList
-		countingNums = new ArrayList<Integer>();
+		countingNums = new ArrayList<>();
 		
 		// For each number in cNums
 		for (int c : cNums)
@@ -49,7 +51,7 @@ public class Countdown extends BukkitRunnable
 	public void run()
 	{
 		// If the arena has fewer than two players
-		if (counting.getPlayers().length == 0) // TODO TEMPORARY! CHANGE BACK TO "< 2"!
+		if (counting.getPlayers().length < 2)
 		{
 			// Set the arena to waiting for players and cancel the countdown
 			counting.setState(ArenaState.WAITING);

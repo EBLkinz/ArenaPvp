@@ -6,6 +6,8 @@ import org.bukkit.event.Listener;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import io.github.eblkinz.arenapvp.listeners.LobbySign;
+
 public class Main extends JavaPlugin
 {
 	/**
@@ -16,7 +18,7 @@ public class Main extends JavaPlugin
 	public void onEnable()
 	{
 		// Register server events
-		// registerEvents(this, );
+		registerEvents(this, new LobbySign());
 		
 		// Set command executor and tab completer
 		PluginCommand pc = getCommand("arenapvp");

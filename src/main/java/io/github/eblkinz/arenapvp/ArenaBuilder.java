@@ -3,15 +3,16 @@ package io.github.eblkinz.arenapvp;
 import java.util.ArrayList;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
-import org.bukkit.block.Chest;
+import org.bukkit.block.Sign;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 
 public final class ArenaBuilder
 {
 	// Create an ArrayList to hold arenas
-	private static ArrayList<Arena> arenas = new ArrayList<Arena>();
+	private static ArrayList<Arena> arenas = new ArrayList<>();
 	
 	/*
 	 * The ArenaBuilder class is a static utility class and should not be instantiated.
@@ -92,9 +93,9 @@ public final class ArenaBuilder
 	
 	public static void addArena(String id)
 	{		
-		Location lobbySpawn;									// Holds the location of the arena's lobby
-		ArrayList<Location> spawns = new ArrayList<Location>();	// Holds the arena's spawn locations
-		ArrayList<Chest> chests = new ArrayList<Chest>();		// Holds the arena's chests
+		Location lobbySpawn;							// Holds the location of the arena's lobby
+		ArrayList<Location> spawns = new ArrayList<>();	// Holds the arena's spawn locations
+		ArrayList<Sign> signs = new ArrayList<>();		// Holds the arena's signs
 		
 		// Attempt to get an arena with the same ID
 		Arena a = getArena(id);
@@ -141,35 +142,47 @@ public final class ArenaBuilder
 			SettingsManager.getArenas().createSection(id + ".spawns");
 		}
 		
-		// If the arena's chest settings already exist
-		if (SettingsManager.getArenas().contains(id + ".chests"))
-		{
-			// For each chest ID in the arenas configuration file
-			for (String chestID : SettingsManager.getArenas().<ConfigurationSection>get(id + ".chests").getKeys(false))
+		// If the arena's sign settings already exist
+		if (SettingsManager.getArenas().contains(id + ".signs"))
+		{			
+			// For each sign ID in the arenas configuration file
+			for (String signID : SettingsManager.getArenas().<ConfigurationSection>get(id + ".signs").getKeys(false))
 			{
-				// Save the location stored at the chest ID
-				Location loc = SettingsManager.getArenas().<Location>get(id + ".chests." + chestID);
+				// Save the location stored at the sign ID
+				Location loc = SettingsManager.getArenas().<Location>get(id + ".signs." + signID);
 				
-				// If the block at the specified location is a chest
-				if (loc.getBlock().getState() instanceof Chest)
+				// If the block at the specified location is a sign
+				if (loc.getBlock().getState() instanceof Sign)
 				{
-					// Load the chest settings
-					chests.add((Chest) loc.getBlock().getState());
+					// Get the sign located at that block
+					Sign sign = (Sign) loc.getBlock().getState();
+					
+					// If the sign corresponds to the correct arena
+					if (ChatColor.stripColor(sign.getLine(1)).equals(id))
+					{
+						// Load the sign settings
+						signs.add(sign);
+					}
+					else 
+					{
+						// Remove the sign from the arenas configuration file
+						SettingsManager.getArenas().set(id + ".signs." + signID, null);
+					}
 				}
 				else
 				{
-					// Remove the chest from the arenas configuration file
-					SettingsManager.getArenas().set(id + ".chests." + chestID, null);
+					// Remove the sign from the arenas configuration file
+					SettingsManager.getArenas().set(id + ".signs." + signID, null);
 				}
 			}
 		}
 		else
 		{
-			// Create the chest section in the arenas configuration file
-			SettingsManager.getArenas().createSection(id + ".chests");
+			// Create the sign section in the arenas configuration file
+			SettingsManager.getArenas().createSection(id + ".signs");
 		}
 		
 		// Create a new Arena object and add it to the arenas ArrayList
-		arenas.add(new Arena(id, lobbySpawn, spawns, chests));
+		arenas.add(new Arena(id, lobbySpawn, signs, spawns));
 	}
 }

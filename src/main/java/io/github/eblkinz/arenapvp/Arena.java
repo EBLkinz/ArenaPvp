@@ -6,7 +6,7 @@ import java.util.UUID;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
-import org.bukkit.block.Chest;
+import org.bukkit.block.Sign;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 
@@ -18,9 +18,10 @@ public class Arena
 	
 	private Location lobbySpawn;		// Holds the location of the lobby
 	
-	private ArrayList<Location> spawns;	// Holds a list of arena spawns
-	private ArrayList<Chest> chests;	// Holds a list of arena chests
 	private ArrayList<UUID> players;	// Holds a list of player's UUIDs
+	private ArrayList<Sign> signs;		// Holds a list of arena signs
+	private ArrayList<Location> spawns;	// Holds a list of arena spawns
+	
 	
 	/*
 	 * Defines the various states an arena can be in.
@@ -32,32 +33,32 @@ public class Arena
 	}
 	
 	/**
-	 * Creates a new arena with the specified ID, lobby, spawns and chests.
+	 * Creates a new arena with the specified ID, lobby, spawns and signs.
 	 * @param arenaID The ID of the arena.
 	 * @param lobby The location of the lobby.
+	 * @param arenaSigns A list of arena signs.
 	 * @param arenaSpawns A list of arena spawns.
-	 * @param arenaChests A list of arena chests.
 	 */
 	
-	protected Arena(String arenaID, Location lobby, ArrayList<Location> arenaSpawns, ArrayList<Chest> arenaChests)
+	protected Arena(String arenaID, Location lobby, ArrayList<Sign> arenaSigns, ArrayList<Location> arenaSpawns)
 	{
 		// Set the ID of the arena to the specified arena ID
 		id = arenaID;
 		
-		// Set the state of the arena to WAITING
-		setState(ArenaState.WAITING);
-		
 		// Set the location of the arena lobby spawn to the specified location
 		lobbySpawn = lobby;
+		
+		// Set the sign(s) of the arena to the specified sign ArrayList
+		signs = arenaSigns;
 		
 		// Set the location(s) of the arena spawn(s) to the specified location ArrayList
 		spawns = arenaSpawns;
 		
-		// Set the chest(s) of the arena to the specified chest ArrayList
-		chests = arenaChests;
-		
 		// Create a new empty UUID ArrayList to hold player's UUIDs
-		players = new ArrayList<UUID>();
+		players = new ArrayList<>();
+		
+		// Set the state of the arena to WAITING
+		setState(ArenaState.WAITING);
 	}
 	
 	/**
@@ -85,10 +86,10 @@ public class Arena
 	 * @param state The new arena state.
 	 */
 	
-	protected void setState(ArenaState arenaState) // TODO Potentially make this private
+	protected void setState(ArenaState arenaState)
 	{
 		state = arenaState;
-		//SignManager.getInstance().updateSigns(this);
+		updateSigns();
 	}
 	
 	/**
@@ -104,48 +105,6 @@ public class Arena
 	}
 	
 	/**
-	 * Gets an array of the arena's spawn locations.
-	 * @return The arena's spawn locations.
-	 */
-	
-	public Location[] getSpawns()
-	{		
-		return spawns.toArray(new Location[spawns.size()]);
-	}
-	
-	/**
-	 * Adds a spawn location to the list of spawns.
-	 * @param loc The location to add.
-	 */
-	
-	public void addSpawn(Location loc)
-	{
-		// Get the number of spawns created for this arena so far
-		int spawnID = SettingsManager.getArenas().<ConfigurationSection>get(id + ".spawns").getKeys(false).size();
-		
-		// Add the spawn to the arenas configuration file and the spawns ArrayList
-		SettingsManager.getArenas().set(id + ".spawns." + spawnID, loc);
-		spawns.add(loc);
-		
-		//SignManager.getInstance().updateSigns(this);
-	}
-	
-	/**
-	 * Adds a new chest to the arena.
-	 * @param chest The chest to add.
-	 */
-	
-	public void addChest(Chest chest)
-	{
-		// Get the number of chests created for this arena so far
-		int chestID = SettingsManager.getArenas().<ConfigurationSection>get(id + ".chests").getKeys(false).size();
-		
-		// Add the chest to the arenas configuration file and the chests ArrayList
-		SettingsManager.getArenas().set(id + ".chests." + chestID, chest.getLocation());
-		chests.add(chest);
-	}
-	
-	/**
 	 * Gets an array of every player in the arena.
 	 * @return Every player in the arena.
 	 */
@@ -153,7 +112,7 @@ public class Arena
 	public Player[] getPlayers()
 	{
 		// Create an empty player list
-		ArrayList<Player> playerList = new ArrayList<Player>();
+		ArrayList<Player> playerList = new ArrayList<>();
 		
 		// For each UUID in the players ArrayList
 		for (UUID u : players)
@@ -185,7 +144,7 @@ public class Arena
 	
 	public void addPlayer(Player p)
 	{
-		// If the arena is full
+		// If the arena is not full
 		if (!isFull())
 		{
 			// Add the player's UUID to the players ArrayList and teleport them to the arena
@@ -203,6 +162,11 @@ public class Arena
 				
 				// Run the countdown
 				c.runTaskTimer(Main.getPlugin(), 0, 20L);
+			}
+			else
+			{
+				// Update the arena's signs
+				updateSigns();
 			}
 		}
 	}
@@ -243,6 +207,148 @@ public class Arena
 			
 			// Set the arena's state to waiting
 			setState(ArenaState.WAITING);
+		}
+		else
+		{
+			// Update the arena's signs
+			updateSigns();
+		}
+	}
+	
+	/**
+	 * Gets an array of the arena's spawn locations.
+	 * @return The arena's spawn locations.
+	 */
+	
+	public Location[] getSpawns()
+	{		
+		return spawns.toArray(new Location[spawns.size()]);
+	}
+	
+	/**
+	 * Adds a spawn location to the list of spawns.
+	 * @param loc The location to add.
+	 */
+	
+	public void addSpawn(Location loc)
+	{
+		// Get the number of spawns created for this arena so far
+		int spawnID = SettingsManager.getArenas().<ConfigurationSection>get(id + ".spawns").getKeys(false).size();
+		
+		// Add the spawn to the arenas configuration file and the spawns ArrayList
+		SettingsManager.getArenas().set(id + ".spawns." + spawnID, loc);
+		spawns.add(loc);
+		
+		updateSigns();
+	}
+	
+	public boolean isLobbySign(Sign sign)
+	{
+		if (signs.contains(sign))
+		{
+			return true;
+		}
+		
+		return false;
+	}
+	
+	/**
+	 * Adds a new sign to the arena.
+	 * @param sign The sign to add.
+	 */
+	
+	public void addSign(Sign sign)
+	{
+		// Get the location of the sign
+		Location loc = sign.getLocation();
+		
+		// For each lobby sign in the signs ArrayList
+		for (Sign lobbySign : signs)
+		{
+			// If the lobby's location is the same as the current signs location
+			if (lobbySign.getLocation().equals(loc))
+			{
+				// The sign already exists
+				return;
+			}
+		}
+		
+		// Get the number of signs created for this arena so far
+		int signID = SettingsManager.getArenas().<ConfigurationSection>get(id + ".signs").getKeys(false).size();
+		
+		// Add the sign to the arenas configuration file and the sings ArrayList
+		SettingsManager.getArenas().set(id + ".signs." + signID, sign.getLocation());
+		signs.add(sign);
+		
+		// Update the arena's signs
+		updateSigns();
+	}
+	
+	/**
+	 * Updates every lobby sign for this arena.
+	 */
+	
+	public void updateSigns()
+	{
+		// Get the number of players and spawns in the arena
+		int numOfPlayers = players.size(),
+			numOfSpawns = spawns.size();
+		
+		// Get the arena's current state as a string
+		String arenaState = state.toString();
+		
+		// For each lobby sign in the signs ArrayList
+		for (Sign sign : signs)
+		{
+			// Set the first line of the sign to "[Arena Pvp]"
+			sign.setLine(0, ChatColor.DARK_GREEN + "[" + ChatColor.GREEN + "Arena Pvp" + ChatColor.DARK_GREEN + "]");
+			
+			// Set the second line of the sign to the arena's ID
+			sign.setLine(1, ChatColor.DARK_GREEN + id);
+			
+			// Set the third line of the sign to the arena's current state
+			if (state == ArenaState.WAITING)
+			{
+				sign.setLine(2, ChatColor.GREEN + arenaState);
+			}
+			else if (state == ArenaState.COUNTDOWN)
+			{
+				sign.setLine(2, ChatColor.YELLOW + arenaState);
+			}
+			else if (state == ArenaState.STARTED)
+			{
+				sign.setLine(2, ChatColor.RED + arenaState);
+			}
+			
+			// If the number of spawns isn't 0
+			if (numOfSpawns != 0)
+			{
+				// Set the fourth line of the sign to the number of players over the number of spawns
+				if ((numOfPlayers / numOfSpawns) < 0.25)
+				{
+					sign.setLine(3, ChatColor.GREEN + "" + numOfPlayers + "/" + numOfSpawns);
+				}
+				else if ((numOfPlayers / numOfSpawns) < 0.5)
+				{
+					sign.setLine(3, ChatColor.YELLOW + "" + numOfPlayers + "/" + numOfSpawns);
+				}
+				else if ((numOfPlayers / numOfSpawns) < 0.75)
+				{
+					sign.setLine(3, ChatColor.GOLD + "" + numOfPlayers + "/" + numOfSpawns);
+				}
+				else if ((numOfPlayers / numOfSpawns) == 1)
+				{
+					sign.setLine(3, ChatColor.RED + "" + numOfPlayers + "/" + numOfSpawns);
+				}
+			}
+			else
+			{
+				// Set the fourth line of the sign to the number of layers over the number of spawns
+				sign.setLine(3, ChatColor.DARK_RED + "" + numOfPlayers + "/" + numOfSpawns);
+			}
+			
+			// Update the sign
+			sign.update();
 		}
 	}
 	

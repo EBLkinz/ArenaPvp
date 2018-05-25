@@ -15,8 +15,7 @@ import org.bukkit.plugin.Plugin;
 public class SettingsManager
 {
 	private final static SettingsManager
-		arenas = new SettingsManager("arenas"),	// Holds information about arenas
-		signs = new SettingsManager("signs");	// Holds information about signs
+		arenas = new SettingsManager("arenas");	// Holds information about arenas
 	
 	/**
 	 * Gets the arenas config file.
@@ -26,16 +25,6 @@ public class SettingsManager
 	public static SettingsManager getArenas()
 	{
 		return arenas;
-	}
-	
-	/**
-	 * Gets the signs config file.
-	 * @return the signs config file.
-	 */
-	
-	public static SettingsManager getSigns()
-	{
-		return signs;
 	}
 	
 	private File file;							// A blank file

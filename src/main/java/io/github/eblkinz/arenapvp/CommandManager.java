@@ -25,7 +25,6 @@ public class CommandManager implements TabExecutor
 	{
 		cmds = new ArrayList<>();
 		
-		cmds.add(new AddChest());
 		cmds.add(new AddSpawn());
 		cmds.add(new AdminPing());
 		cmds.add(new CreateArena());
