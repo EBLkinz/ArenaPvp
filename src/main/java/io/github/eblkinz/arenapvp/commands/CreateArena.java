@@ -16,7 +16,7 @@ public class CreateArena extends GameCommand
 		// If no ID was given
 		if (args.length == 0)
 		{
-			// Send a warning message and return
+			// Display a warning message and return
 			p.sendMessage(ChatColor.RED + "You must specify an id for the arena.");
 			return;
 		}
@@ -27,13 +27,14 @@ public class CreateArena extends GameCommand
 		// If the there's already an arena with that ID
 		if (ArenaBuilder.getArena(id) != null)
 		{
-			// Send a warning message and return
-			p.sendMessage(ChatColor.RED + "An arena with that name already exists.");
-			return;
+			// Display a warning message
+			p.sendMessage(ChatColor.RED + "An arena with that id already exists.");
 		}
-		
-		// Create a new arena with the specified ID and print a confirmation message
-		ArenaBuilder.addArena(id);
-		p.sendMessage(ChatColor.GREEN + "Created arena " + ChatColor.GOLD + id + ChatColor.GREEN + ".");
+		else
+		{
+			// Create a new arena with the specified ID and display a confirmation message
+			ArenaBuilder.addArena(id);
+			p.sendMessage(ChatColor.GREEN + "Created arena " + ChatColor.GOLD + id + ChatColor.GREEN + ".");
+		}
 	}
 }

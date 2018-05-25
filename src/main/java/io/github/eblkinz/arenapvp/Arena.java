@@ -7,6 +7,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.block.Chest;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 
 public class Arena
@@ -97,6 +98,8 @@ public class Arena
 	
 	public void setLobby(Location loc)
 	{
+		// Set the lobby location of the arena
+		SettingsManager.getArenas().set(id + ".lobby", loc);
 		lobbySpawn = loc;
 	}
 	
@@ -117,6 +120,11 @@ public class Arena
 	
 	public void addSpawn(Location loc)
 	{
+		// Get the number of spawns created for this arena so far
+		int spawnID = SettingsManager.getArenas().<ConfigurationSection>get(id + ".spawns").getKeys(false).size();
+		
+		// Add the spawn to the arenas configuration file and the spawns ArrayList
+		SettingsManager.getArenas().set(id + ".spawns." + spawnID, loc);
 		spawns.add(loc);
 		
 		//SignManager.getInstance().updateSigns(this);
@@ -129,6 +137,11 @@ public class Arena
 	
 	public void addChest(Chest chest)
 	{
+		// Get the number of chests created for this arena so far
+		int chestID = SettingsManager.getArenas().<ConfigurationSection>get(id + ".chests").getKeys(false).size();
+		
+		// Add the chest to the arenas configuration file and the chests ArrayList
+		SettingsManager.getArenas().set(id + ".chests." + chestID, chest.getLocation());
 		chests.add(chest);
 	}
 	
@@ -173,26 +186,24 @@ public class Arena
 	public void addPlayer(Player p)
 	{
 		// If the arena is full
-		if (players.size() >= spawns.size())
+		if (!isFull())
 		{
-			// Send a warning to the player and return
-			p.sendMessage(ChatColor.RED + "This arena is full");
-			return;
-		}
-		
-		// Add the player's UUID to the players ArrayList and teleport them to the arena
-		players.add(p.getUniqueId());
-		p.teleport(spawns.get(players.size() - 1));
-		
-		// Send the player a join message
-		p.sendMessage(ChatColor.GREEN + "You have joined arena " + ChatColor.GOLD + id + ChatColor.GREEN + ".");
-		
-		// If the arena is full and waiting to begin a game
-		if (players.size() >= spawns.size() && state == ArenaState.WAITING)
-		{
-			// Start the countdown to begin the game
-			setState(ArenaState.COUNTDOWN);
-			//new Countdown(this, 30, 30, 20, 15, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1).runTaskTimer(Main.getPlugin(), 0, 20L);
+			// Add the player's UUID to the players ArrayList and teleport them to the arena
+			players.add(p.getUniqueId());
+			p.teleport(spawns.get(players.size() - 1));
+			
+			// If the arena is full and waiting to begin a game
+			if (isFull() && state == ArenaState.WAITING)
+			{
+				// Set the arena's state to countdown
+				setState(ArenaState.COUNTDOWN);
+				
+				// Create a new countdown
+				Countdown c = new Countdown(30, this, 30, 20, 15, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1);
+				
+				// Run the countdown
+				c.runTaskTimer(Main.getPlugin(), 0, 20L);
+			}
 		}
 	}
 	

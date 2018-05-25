@@ -31,7 +31,7 @@ public final class ArenaBuilder
 		// Clear the list of arenas
 		arenas.clear();
 		
-		// For each arenaID in the arenas configuration file
+		// For each arena ID in the arenas configuration file
 		for (String arenaID : SettingsManager.getArenas().getKeys())
 		{
 			// Build the arena

@@ -11,9 +11,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabExecutor;
 import org.bukkit.entity.Player;
 
-import io.github.eblkinz.arenapvp.commands.AdminPing;
-import io.github.eblkinz.arenapvp.commands.CreateArena;
-import io.github.eblkinz.arenapvp.commands.Ping;
+import io.github.eblkinz.arenapvp.commands.*;
 
 public class CommandManager implements TabExecutor
 {
@@ -27,9 +25,15 @@ public class CommandManager implements TabExecutor
 	{
 		cmds = new ArrayList<>();
 		
-		cmds.add(new Ping());
+		cmds.add(new AddChest());
+		cmds.add(new AddSpawn());
 		cmds.add(new AdminPing());
 		cmds.add(new CreateArena());
+		cmds.add(new Join());
+		cmds.add(new Leave());
+		cmds.add(new Ping());
+		cmds.add(new RemoveArena());
+		cmds.add(new SetLobby());
 	}
 	
 	/*
