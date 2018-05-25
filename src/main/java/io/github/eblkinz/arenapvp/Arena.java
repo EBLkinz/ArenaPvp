@@ -143,10 +143,41 @@ public class Arena
 	 */
 	
 	public void addPlayer(Player p)
-	{
-		// If the arena is not full
-		if (!isFull())
+	{		
+		// If the arena is full
+		if (isFull())
 		{
+			// Display a warning and return
+			p.sendMessage(ChatColor.RED + "This arena is full.");
+			return;
+		}
+		else
+		{
+			// Attempt to get the arena the player is currently in
+			Arena current = ArenaBuilder.getArena(p);
+			
+			// If the player is in an arena
+			if (current != null)
+			{
+				// If the player's current arena is the same as the one they are trying to join
+				if (current.getID().equals(id))
+				{
+					// Display a warning message and return
+					p.sendMessage(ChatColor.RED + "You are already in this arena.");
+					return;
+				}
+				else
+				{
+					// Remove the player from their current arena and display a notification
+					current.removePlayer(p);
+					p.sendMessage(ChatColor.GREEN + "Leaving arena " + ChatColor.GOLD +
+								  current.getID() + ChatColor.GREEN + ".");
+				}
+			}
+			
+			// Display a confirmation message
+			p.sendMessage(ChatColor.GREEN + "Joining arena " + ChatColor.GOLD + id + ChatColor.GREEN + ".");
+			
 			// Add the player's UUID to the players ArrayList and teleport them to the arena
 			players.add(p.getUniqueId());
 			p.teleport(spawns.get(players.size() - 1));

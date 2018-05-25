@@ -36,38 +36,7 @@ public class Join extends GameCommand
 			return;
 		}
 		
-		// If the arena is full
-		if (next.isFull())
-		{
-			// Send a warning to the player and return
-			p.sendMessage(ChatColor.RED + "This arena is full.");
-			return;
-		}
-		
-		// Attempt to get the arena the player is currently in
-		Arena current = ArenaBuilder.getArena(p);
-		
-		// If the player is in an arena
-		if (current != null)
-		{
-			
-			// If the player's current arena is the same as the one they are trying to join
-			if (current.getID().equals(next.getID()))
-			{
-				// Display a warning message and return
-				p.sendMessage(ChatColor.RED + "You are already this arena.");
-				return;
-			}
-			else
-			{
-				// Remove the player from their current arena
-				current.removePlayer(p);
-				p.sendMessage(ChatColor.GREEN + "Leaving arena " + ChatColor.GOLD + id + ChatColor.GREEN + ".");
-			}
-		}
-		
-		// Join the arena and display a confirmation message
+		// Join the arena
 		next.addPlayer(p);
-		p.sendMessage(ChatColor.GREEN + "Joining arena " + ChatColor.GOLD + id + ChatColor.GREEN + ".");
 	}
 }
